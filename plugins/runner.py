@@ -1,21 +1,28 @@
 import subprocess
+import os
+import sys
 
 from loguru import logger
 
-from plugins.parser import get_repository_url
+from plugins.parser import create_parser
 
 
-def run_git_clone_process():
+def run_git_clone_process() -> None:
+    args = create_parser().parse_args()
+    repository = args.repository
 
-    run_create_directory_command()
-    subprocess.Popen(f"cd sendbox && git clone {get_repository_url()}",
-                     shell=True,
+    logger.info("Downloading repository")
+
+    if not repository:
+        create_parser().print_help()
+        sys.exit(0)
+
+    if not os.path.exists('sandbox'):
+        os.makedirs('sandbox')
+
+    subprocess.Popen(cwd='./sandbox',
+                     args=['git', 'clone', repository],
                      stderr=subprocess.STDOUT,
                      stdout=subprocess.DEVNULL).communicate()
+
     logger.info("Done")
-
-
-def run_create_directory_command():
-    """ Create sendbox/ directory if not exist """
-
-    subprocess.call(['./shell/create_directory.sh'])
