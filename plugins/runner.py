@@ -8,20 +8,20 @@ from plugins.parser import create_parser
 
 
 def run_git_clone_process() -> None:
-    args = create_parser().parse_args()
-    repository = args.repository
+    parser = create_parser()
+    args = parser.parse_args()
 
-    logger.info("Downloading repository")
-
-    if not repository:
+    if not args.repository:
         create_parser().print_help()
         sys.exit(0)
 
     if not os.path.exists('sandbox'):
         os.makedirs('sandbox')
 
+    logger.info("Downloading repository")
+
     subprocess.Popen(cwd='./sandbox',
-                     args=['git', 'clone', repository],
+                     args=['git', 'clone', args.repository],
                      stderr=subprocess.STDOUT,
                      stdout=subprocess.DEVNULL).communicate()
 
