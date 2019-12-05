@@ -1,6 +1,4 @@
-from plugins.runner import run_git_clone_process
+from runner import execute_scanner
 
 if __name__ == '__main__':
-
-    run_git_clone_process()
-
+    execute_scanner()
